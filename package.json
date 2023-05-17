@@ -1,0 +1,12 @@
+{
+	"type": "module",
+	"scripts": {
+		"run": "npm run build && node .o/index.js",
+		"build": "tsc --build"
+	},
+	"dependencies": {
+		"@types/node": "^20.1.7",
+		"discord.js": "^14.11.0",
+		"typescript": "^5.0.4"
+	}
+}
