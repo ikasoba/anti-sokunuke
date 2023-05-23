@@ -34,7 +34,7 @@ client.on("guildMemberRemove", async (member) => {
     member.ban();
     console.log("banned member", member.user.tag);
     o[member.id] = {
-      date: Date.now() + config.unbanDuration,
+      date: Date.now() + config.unbanDuration * 1000,
       guild: member.guild.id,
       name: member.user.tag,
     };
