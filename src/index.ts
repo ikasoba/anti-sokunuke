@@ -23,7 +23,7 @@ const client = new Client({
 // 5 minutes
 const duration = config.duration * 1000;
 
-client.on("guildMemberRemove", (member) => {
+client.on("guildMemberRemove", async (member) => {
   console.log(
     "leaved member",
     member.user.tag,
@@ -38,17 +38,24 @@ client.on("guildMemberRemove", (member) => {
       guild: member.guild.id,
       name: member.user.tag,
     };
+    await fs.writeFile(".tmp.json", JSON.stringify(o), "utf-8");
   }
 });
 
 const f = async () => {
   for (const [k, v] of Object.entries(o)) {
-    if (v.date >= Date.now()) {
-      const guild = await client.guilds.fetch(o.guild);
-      await guild.members.unban(k);
-      console.log(`unbanned user ${v.name}`);
-      delete o[k];
-      fs.writeFile(".tmp.json", JSON.stringify(o), "utf-8");
+    if (v.date <= Date.now()) {
+      const guild = await client.guilds.fetch(v.guild);
+      try {
+        await guild.members.unban(k);
+        console.log(`unbanned user ${v.name}`);
+        delete o[k];
+        await fs.writeFile(".tmp.json", JSON.stringify(o), "utf-8");
+      } catch (e) {
+        console.error("エラーが発生しました。後で再試行します。");
+        console.error(e);
+        continue;
+      }
     }
   }
   setTimeout(f, 16);
