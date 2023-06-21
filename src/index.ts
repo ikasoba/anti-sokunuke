@@ -31,7 +31,7 @@ client.on("guildMemberRemove", async (member) => {
     new Date().toLocaleString()
   );
   if (Date.now() - (member.joinedTimestamp ?? Date.now()) < duration) {
-    member.ban();
+    await member.ban();
     console.log("banned member", member.user.tag);
     o[member.id] = {
       date: Date.now() + config.unbanDuration * 1000,
